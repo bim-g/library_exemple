@@ -36,7 +36,7 @@
                                 }
                             break;
                             case "number":
-                                if(!(int)$value){
+                                if(preg_match("#.\W#",$value) || preg_match("#[a-zA-Z]#",$value)){
                                     $this->addError("{$item} must be a number");
                                 }
                             break;

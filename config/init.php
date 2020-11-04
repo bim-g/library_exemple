@@ -20,7 +20,7 @@
         $subDir = array();
         $directories = array_filter(glob($dir), 'is_dir');
         $subDir = array_merge($subDir, $directories);
-        foreach ($directories as $directory) $subDir = array_merge($subDir, getSubDirectories($directory . '/*'));
+        foreach ($directories as $directory) $subDir = array_merge($subDir, getSubDirectories($directory . '\\*'));
         return $subDir;
     }
 
@@ -28,7 +28,7 @@
     spl_autoload_register(function($class){
         $dirs = getSubDirectories("class");
         foreach($dirs as $dir){
-            $file=$dir."/".$class.".php";
+            $file=$dir."\\".$class.".php";
             if (is_file($file)) { // check if the file exist
                 require_once($file); // incluse the file request if it exist
             }

@@ -1,4 +1,6 @@
-<?php    
+<?php
+
+namespace Wepesi\Core\App;
     class Hash{
         static function make($string,$salt=""){
             // could use password_hash instead of hash only so that you may use the BCRYPT as the hashing algorythm

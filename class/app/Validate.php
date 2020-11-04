@@ -1,5 +1,6 @@
 <?php
- 
+
+namespace Wepesi\Core\App;
     class Validate{
         private $_passed=false;
         private $_errors=false;

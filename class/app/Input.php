@@ -1,4 +1,6 @@
-<?php    
+<?php
+
+namespace Wepesi\Core\App;
     class Input{
         static function exists($type="post"){
             switch($type){

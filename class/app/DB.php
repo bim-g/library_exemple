@@ -1,4 +1,8 @@
 <?php
+
+namespace Wepesi\Core\App;
+use \PDOException;
+use \PDO;
     class DB
     {
         private static $_instance = null;

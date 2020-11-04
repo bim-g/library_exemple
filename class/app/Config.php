@@ -1,5 +1,6 @@
 <?php
 
+namespace Wepesi\Core\App;
     class Config{
         static function get($path=null){
             if($path){

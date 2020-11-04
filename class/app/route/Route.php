@@ -1,6 +1,9 @@
 <?php
+namespace Wepesi\Core\App\Route;
 
-    class Route{
+use Wepesi\Core\App\Controller;
+
+class Route{
         private $_path;
         private $_collable;
         private $_matches=[];

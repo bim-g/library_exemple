@@ -1,5 +1,8 @@
 <?php
-    class Messages{
+
+namespace Wepesi\app;
+use Session;
+class Messages{
         function sendMessage(array $data){            
             $messages=[];
             $messages=Session::get("messages")?Session::get("messages"):[];            

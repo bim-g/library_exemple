@@ -1,5 +1,8 @@
 <?php
-    class Users{
+namespace Wepesi\app;
+use Session;
+
+class Users{
         function register(array $data){        
             $users=[]; //users contiendra tout les utilisateur qui existant deja
             $state=false; // permetra de ssavoir si un utilisateur existe deja ou pas

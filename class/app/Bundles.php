@@ -1,4 +1,5 @@
 <?php
+    namespace Wepesi\Core\App;
     class Bundles{
         static function insertCSS($file){
             if(is_file("layout/style/" . $file . ".css")){

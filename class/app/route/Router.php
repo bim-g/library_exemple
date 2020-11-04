@@ -1,7 +1,8 @@
 <?php
-    
-    class  Router{
 
+namespace Wepesi\Core\App\Route;
+use \FFI\Exception;
+    class  Router{
         private  $_url;
         private  $routes=[];
         private  $_nameRoute=[];

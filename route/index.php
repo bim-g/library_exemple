@@ -1,7 +1,8 @@
 <?php
-    $route=new Router();
+
+$route=new Router();
     $route->get('/',function(){
-        new view('home');
+        new View('home');
     });
 
     include('users.php');

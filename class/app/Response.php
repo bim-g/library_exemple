@@ -1,4 +1,6 @@
 <?php
+
+namespace Wepesi\Core\App;
     class Response{
         static function send($data,$status=200){
             http_response_code($status);

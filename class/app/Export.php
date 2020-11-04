@@ -1,5 +1,6 @@
 <?php
 
+namespace Wepesi\Core\App;
 class Export {
 
     static function cleanData(&$str){

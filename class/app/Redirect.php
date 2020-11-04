@@ -1,4 +1,6 @@
 <?php
+
+namespace Wepesi\Core\App;
     class Redirect{
         static function to($location=null){
             if($location){

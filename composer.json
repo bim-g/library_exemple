@@ -1,0 +1,19 @@
+{
+    "name": "lenovo/libre_exemple",
+    "type": "library",
+    "require-dev": {
+        "composer/composer": "^2.0"
+    },
+    "authors": [
+        {
+            "name": "bim-g",
+            "email": "ibmussafb@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+        "psr-4":{
+            "Wepesi\\":"class/"
+        }
+    }
+}

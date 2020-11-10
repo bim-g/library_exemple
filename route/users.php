@@ -1,5 +1,8 @@
 <?php
-    $route->get('/users', "usersCtrl#getusers");
+
+use Wepesi\App\Core\View;
+
+$route->get('/users', "usersCtrl#getusers");
     $route->get("/users/:id/detail", "usersCtrl#userDetail");
     $route->get("users/profil",function(){
         new View("profil");

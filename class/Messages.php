@@ -1,7 +1,8 @@
 <?php
 
-namespace Wepesi\app;
-use Session;
+namespace Wepesi\App;
+
+use Wepesi\App\Core\Session;
 class Messages{
         function sendMessage(array $data){            
             $messages=[];

@@ -1,5 +1,8 @@
 <?php
-	$exception=false;
+
+use Wepesi\App\Core\{BoxMessage, Session};
+
+$exception=false;
 	if(Session::exists('error') && Session::exists('errorMessage')){
 		$exception=Session::get('errorMessage');
 	}  

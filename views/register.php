@@ -1,5 +1,8 @@
 <?php
-    ob_start();
+
+use Wepesi\App\Core\Token;
+
+ob_start();
     $title="Register";   
     if(isset($error)){
         var_dump($error);

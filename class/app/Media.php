@@ -1,6 +1,6 @@
 <?php
 
-namespace Wepesi\Core\App;
+namespace Wepesi\App\Core;
     class Media{
         private $_target_dir;
         const maxWidth = 480;

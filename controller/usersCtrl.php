@@ -1,5 +1,16 @@
 <?php
-    Controller::useController("viewCtrl");
+
+use Wepesi\App\Core\{
+    Controller,
+    Validate,
+    Input,
+    Token,
+    Redirect,
+    Session
+};
+use Wepesi\app\Users;
+
+Controller::useController("viewCtrl");
 
     class usersCtrl extends viewCtrl{
         private $validate,$users;
@@ -92,7 +103,7 @@
                 Redirect::to(WEB_ROOT);
             }
         }
-        function getusers($token){            
+        function getusers($token=null){            
             $result=$this->users->getusers();
             $this->view("user",$result);           
         }

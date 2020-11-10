@@ -1,5 +1,5 @@
 <?php
-    namespace Wepesi\Core\App;
+    namespace Wepesi\App\Core;
     class BoxMessage{
         static function errors($type, $result){
             $message=[];

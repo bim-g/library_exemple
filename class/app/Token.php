@@ -1,6 +1,6 @@
 <?php
 
-namespace Wepesi\Core\App;
+namespace Wepesi\App\Core;
     class Token{
         static function generate(){
             return Session::put(Config::get("session/token_name"),md5(uniqid()));

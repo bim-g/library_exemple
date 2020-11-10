@@ -1,4 +1,7 @@
 <?php
+
+    use Wepesi\App\Core\{BoxMessage, Session};
+
     $message = BoxMessage::warning(Session::get('warning'));
     Session::get('warning');
 ?>

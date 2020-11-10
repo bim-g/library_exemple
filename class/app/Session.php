@@ -1,6 +1,6 @@
 <?php
 
-namespace Wepesi\Core\App;
+namespace Wepesi\App\Core;
     class Session{
         static function exists($name){
             return (isset($_SESSION[$name]))?true:false;

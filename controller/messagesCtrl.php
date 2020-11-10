@@ -1,4 +1,15 @@
 <?php
+
+use Wepesi\App\Core\{
+    Controller,
+    Validate,
+    Input,
+    Token,
+    Redirect,
+    Session
+};
+use Wepesi\App\Messages;
+
     Controller::useController('viewCtrl');
     class messagesCtrl extends viewCtrl{
         private $validate,$message;

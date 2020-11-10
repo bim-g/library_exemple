@@ -1,7 +1,7 @@
 <?php
-namespace Wepesi\Core\App\Route;
+namespace Wepesi\App\Core;
 
-use Wepesi\Core\App\Controller;
+use Wepesi\App\Core\Controller;
 
 class Route{
         private $_path;

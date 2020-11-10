@@ -1,6 +1,6 @@
 <?php
 
-    namespace Wepesi\Core\App;
+    namespace Wepesi\App\Core;
     class Controller{
         
         static function useModel($file)        {

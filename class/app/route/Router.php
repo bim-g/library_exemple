@@ -1,6 +1,6 @@
 <?php
 
-namespace Wepesi\Core\App\Route;
+namespace Wepesi\App\Core;
 use \FFI\Exception;
     class  Router{
         private  $_url;

@@ -1,5 +1,8 @@
 <?php
-    ob_start();
+
+use Wepesi\App\Core\Session;
+
+ob_start();
     $title = "profil";
     $name=$username=null;
     if(Session::exists('name') && Session::exists('username')){

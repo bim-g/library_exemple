@@ -1,5 +1,7 @@
 <?php
 
+use Wepesi\App\Core\{BoxMessage,Session};
+
 $message = BoxMessage::success(Session::get('success'));
 Session::delete('success');
 ?>

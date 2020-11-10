@@ -1,6 +1,6 @@
 <?php
-namespace Wepesi\app;
-use Session;
+namespace Wepesi\App;
+use Wepesi\App\Core\Session;
 
 class Users{
         function register(array $data){        

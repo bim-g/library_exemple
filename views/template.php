@@ -1,4 +1,8 @@
 <?php
+
+use Wepesi\App\Core\{
+    Session,Bundles};
+
 $loged=true;
 if (!Session::exists("loged") && !Session::exists("username")) {
     $loged=false;

@@ -1,4 +1,7 @@
 <?php
+
+use Wepesi\App\Core\Token;
+
 ob_start();
 $title = "home";
 $token = Token::generate();

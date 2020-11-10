@@ -1,5 +1,9 @@
 <?php
-    ob_start();
+
+use Wepesi\App\Core\{
+    Token,Session};
+
+ob_start();
     $title = "message";    
     $token = Token::generate();
     $username = Session::get("username");

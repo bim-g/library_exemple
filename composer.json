@@ -10,9 +10,9 @@
         }
     ],
     "require": {},
-    "autoload":{
-        "psr-4":{
-            "Wepesi\\":"class"
+    "autoload": {
+        "psr-4": {
+            "Wepesi\\": "class/"
         }
     }
 }

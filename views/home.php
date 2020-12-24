@@ -6,8 +6,8 @@ ob_start();
 $title = "home";
 $token = Token::generate();
 ?>
-<div class=" w3-border w3-margin " id="login" style="width: 300px;">
-    <h4 class="w3-padding w3-blue">Login</h4>
+<div class="w3-border w3-margin" id="login" style="width: 300px;">
+    <div class="w3-padding w3-blue">Login</div>
     <form action="<?= WEB_ROOT . 'users/login' ?>" method="post">
         <input type="hidden" name="token" value="<?= $token ?>">
         <div class="w3-padding">
@@ -23,7 +23,7 @@ $token = Token::generate();
     </form>
 </div>
 <div class=" w3-border w3-margin" id="register" style="width: 300px;display:none;">
-    <h4 class="w3-padding w3-green">Register</h4>
+    <div class="w3-padding w3-green">Register</div>
     <form action="<?= WEB_ROOT . 'users/register' ?>" method="post">
         <input type="hidden" name="token" value="<?= $token ?>">
         <div class="w3-padding">

@@ -8,8 +8,7 @@ use Wepesi\App\Core\{
     Redirect,
     Session
 };
-use Wepesi\app\Users;
-
+use Wepesi\App\Users;
 Controller::useController("viewCtrl");
 
     class usersCtrl extends viewCtrl{
@@ -43,7 +42,7 @@ Controller::useController("viewCtrl");
                         "username"=>Input::get("username"),
                         "password"=>Input::get("password")
                     ];
-                    $result=$this->users->login($data);                
+                    $result=$this->users->login($data);
                     if(!$result){
                         $this->exception("user does not existe");                    
                         Redirect::to(WEB_ROOT);

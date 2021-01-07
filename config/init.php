@@ -15,5 +15,4 @@
             "token_name"=>"token"
         )
     );
-require "./vendor/autoload.php";
 require_once 'controller/sanitize.php';

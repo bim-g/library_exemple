@@ -2,23 +2,24 @@
 
 use Wepesi\App\Core\{
     Controller,
+    EventEmitter,
     Validate,
     Input,
     Token,
     Redirect,
     Session
 };
-use Wepesi\app\Users;
-
+use Wepesi\App\Users;
 Controller::useController("viewCtrl");
 
     class usersCtrl extends viewCtrl{
-        private $validate,$users;
+        private $validate,$users,$emitter;
 
         function __construct()
         {
             $this->validate= new Validate();
             $this->users=new Users();
+            $this->emitter=EventEmitter::getInstance();
         }
         function login(){
             $pages="";
@@ -43,7 +44,12 @@ Controller::useController("viewCtrl");
                         "username"=>Input::get("username"),
                         "password"=>Input::get("password")
                     ];
-                    $result=$this->users->login($data);                
+                    $result=$this->users->login($data);
+                    $this->emitter->on("login",function($a,$b){
+                        echo "your username is {$a} and password is {$b}<br>";
+                    });   
+                    
+                    
                     if(!$result){
                         $this->exception("user does not existe");                    
                         Redirect::to(WEB_ROOT);
@@ -51,7 +57,7 @@ Controller::useController("viewCtrl");
                         Session::put("loged",true);
                         Session::put("username",$result['username']);
                         Session::put("name",$result['name']);
-                        // Session::put("ustoken",$result['token']);
+                        Session::put("ustoken",$result['token']);
                         Session::put("id",$result['id']);
                         $pages="users/profil";
                     }

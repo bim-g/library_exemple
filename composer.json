@@ -1,9 +1,8 @@
 {
-    "name": "lenovo/libre_exemple",
+    "name": "vendor/wepesi",
+    "description": "simple librari allow to devellope web app by following mvc architecture",
     "type": "library",
-    "require-dev": {
-        "composer/composer": "^2.0"
-    },
+    "license": "mit",
     "authors": [
         {
             "name": "bim-g",
@@ -11,9 +10,9 @@
         }
     ],
     "require": {},
-    "autoload":{
-        "psr-4":{
-            "Wepesi\\":"class/"
+    "autoload": {
+        "psr-4": {
+            "Wepesi\\": "class/"
         }
     }
 }

@@ -117,35 +117,21 @@ use \FFI\Exception;
         }
         private function query($sql, array $params = [])
         {
-            $this->_error = false;
-            if ($_query = $this->_pdo->prepare($sql)) {
-                $x = 1;
-                if (count($params)) {
-                    foreach ($params as $param) {
-                        $_query->bindValue($x, $param);
-                        $x++;
-                    }
-                }
-                if ($_query->execute()) {
-                    if (strchr($sql, "UDPATE")) {
-                        $this->_count = $_query->rowCount();
-                    } else if (strchr($sql, "INSERT INTO")) {
-                        $this->_lastid = $this->_pdo->lastInsertId();
-                    }
-                } else {
-                    $this->_error = true;
-                }
-            }
+            $q = new DBQeury($this->_pdo, $sql, $params);
+            $this->_results = $q->result();
+            $this->_count = $q->rowCount();
+            $this->_error = $q->getError();
+            $this->_lastid = $q->lastId();
             return $this;
         }
         // 
         private function insert()
         {
-            if (isset($this->_fields['keys']) && isset($this->_fields['values']) && isset($this->_fields['params'])) {
+           if (isset($this->_fields['keys']) && isset($this->_fields['values']) && isset($this->_fields['params'])){
                 $fields = $this->_fields['keys'];
                 $values =  $this->_fields['values'];
                 $params = $this->_fields['params'];
-                $sql = "INSERT INTO {$this->table} ({$fields}) VALUES ({$values})";
+                $sql = "INSERT INTO {$this->table} ({$fields}) VALUES ({$values})";           
                 if (!$this->query($sql, $params)->error()) {
                     return true;
                 }
@@ -158,7 +144,10 @@ use \FFI\Exception;
             $where = isset($this->_where['field']) ? $this->_where['field'] : "";
             $params = isset($this->_where['params']) ? $this->_where['params'] : [];
             $sql = "DELETE FROM {$this->table} {$where}";
-            return  $this->query($sql, $params);
+            if (!$this->query($sql, $params)->error()) {
+                return true;
+            }
+            return false;
         }
         // build request siurce
         private function build()

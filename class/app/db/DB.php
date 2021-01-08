@@ -8,17 +8,20 @@ use \FFI\Exception;
     {
         private static $_instance = null;
         private $_pdo,
-            $_query,
+            $_query, $sqlQUery,
             $_error,
             $_results = false,
             $_lastid,
             $_count = 0;
-
+        private $option=[
+            PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES utf8",
+            PDO::ATTR_EMULATE_PREPARES=>false,
+            PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION
+        ]  ;
         private function __construct()
         {
             try {
-                $this->_pdo = new PDO("mysql:host=" . Config::get('mysql/host') . ";dbname=" . Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'));
-                $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                $this->_pdo = new PDO("mysql:host=" . Config::get('mysql/host') . ";dbname=" . Config::get('mysql/db'), Config::get('mysql/username'), Config::get('mysql/password'),$this->option);
             } catch (PDOException $ex) {
                 die($ex->getMessage());
             }
@@ -45,7 +48,7 @@ use \FFI\Exception;
                 throw new Exception("table name should be a string");
             }
             $_get = new DBSelect($this->_pdo, $table);
-            $this->_query = $_get;
+            $this->sqlQUery = $_get;
             return $_get;
         }
         // insert module
@@ -58,14 +61,30 @@ use \FFI\Exception;
         {
             return $this->queryOperation($table, "delete");
         }
+        //
+        function query($sql, array $params = [])
+        {
+            $q = new DBQeury($this->_pdo, $sql, $params);
+            $this->_results = $q->result();
+            $this->_count = $q->rowCount();
+            $this->_error = $q->getError();
+            $this->_lastid = $q->lastId();
+            return $this;
+        }
         // return the last id
         function lastId()
         {
-            return $this->_query->lastId();
+            return isset($this->_query) ? $this->_query->lastId() : $this->_lastid;
         }
         // return an error status when an error occure while doing an querry
         function error()
         {
-            $this->_query->error();
+            $_error = isset($this->sqlQUery) ? $this->sqlQUery->error() : $this->_error;
+            $_error = isset($this->_query) ? $this->_query->error() : $this->_error;
+            return $_error;
+        }
+        function result()
+        {
+            return $this->_results;
         }
     }

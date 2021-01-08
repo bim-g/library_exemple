@@ -179,21 +179,10 @@ use \PDO;
         }
         private function query($sql, array $params = [])
         {
-            if ($_query = $this->_pdo->prepare($sql)) {
-                $x = 1;
-                if (count($params)) {
-                    foreach ($params as $param) {
-                        $_query->bindValue($x, $param);
-                        $x++;
-                    }
-                }
-                if ($_query->execute()) {
-                    $this->_results = $_query->fetchAll(PDO::FETCH_OBJ);
-                    $this->_count = $_query->rowCount();
-                } else {
-                    $this->_error = true;
-                }
-            }
+            $q = new DBQeury($this->_pdo, $sql, $params);
+            $this->_results = $q->result();
+            $this->_count = $q->rowCount();
+            $this->_error = $q->getError();
             return $this;
         }
         // execute query to get result

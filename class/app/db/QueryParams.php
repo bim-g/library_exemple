@@ -23,7 +23,37 @@ use \FFI\Exception;
             $this->_limit = null;
             $this->_offset = null;
         }
-
+        function fields(array $fields = [])
+        {
+            if (count($fields) && !$this->_fields && ($this->action == "insert" || $this->action == "update")) {
+                $keys = $fields;
+                $values = null;
+                $params = $keys;
+                $x = 1;
+                if ($this->action == "insert" || $this->action == "update") {
+                    $keys = array_keys($fields);
+                    $values = "";
+                    foreach ($fields as $field) {
+                        $values .= "? ";
+                        if ($x < count($fields)) {
+                            $values .= ', ';
+                        }
+                        $x++;
+                    }
+                }
+                $implode= "`" . implode('`,`', $keys) . "`";
+                if($this->action=="update"){
+                    $implode= "`" . implode('`= ?,`', $keys) . "`";
+                    $implode.="=?";
+                }
+                $this->_fields = [
+                    "keys" => $implode,
+                    "values" => $values,
+                    "params" => $params
+                ];
+            }
+            return $this;
+        }
         function where(array $where = [])
         {
             // select where <> update where
@@ -44,63 +74,46 @@ use \FFI\Exception;
                     $keys = $where;
                     $params = [];
                     $values = null;
+                    $x = 1;                    
+                    // defined comparion operator to avoid error while assing operation witch does not exist
+                    $comparisonOperator = ["<", "<=", ">", ">=", "<>", "!="];
+                    $logicalOperator = ["or", "not"];
+                    // chech if the array is multidimensional array
+                    $where = is_array($where[0]) ? $where : [$where];
+                    $whereLen = count($where);
+                    // 
+                    $jointureWhereCondition = "";
+                    $defaultComparison = "=";
+                    $lastIndexWhere = 1;
+                    $fieldValue = [];
+                    // 
+                    foreach ($where as $WhereField) {
+                        $defaultLogical = " and ";
+                        $notComparison = "";
+                        // check if there is a logical operatior `or`||`and`
+                        if (isset($WhereField[3])) {
+                            // check id the defined operation exist in our defined tables
+                            $defaultLogical = in_array(strtolower($WhereField[3]), $logicalOperator) ? $WhereField[3] : " and ";
+                            if ($defaultLogical === "not") {
+                                $notComparison = " not ";
+                            }
+                        }
+                        // check the field exist and defined by default one
+                        $_WhereField = strlen($WhereField[0]) > 0 ? $WhereField[0] : "id";
+                        $jointureWhereCondition .= " {$notComparison}{$_WhereField}{$defaultComparison} ? ";
+                        $valueTopush = isset($WhereField[2]) ? $WhereField[2] : "";
+                        array_push($fieldValue, $valueTopush);
+                        array_push($params, [$_WhereField => $valueTopush]);
 
-                    $x = 1;
-                    if ($this->action === "insert") {
-                        $getKeys = array_keys($keys);
-                        $checkKey = is_string($getKeys[0]);
-                        $params = $where;
-                        if (!$checkKey) {
-                            throw new Exception("where data format error");
-                        }
-                        $keys = array_keys($where);
-                        foreach ($where as $elem) {
-                            $values .= "? ";
-                            if ($x < count($where)) {
-                                $values .= ', ';
+                        if ($lastIndexWhere < $whereLen) {
+                            if ($defaultLogical != "not") {
+                                $jointureWhereCondition .= $defaultLogical;
                             }
-                            $x++;
                         }
-                    } else {
-                        // defined comparion operator to avoid error while assing operation witch does not exist
-                        $comparisonOperator = ["<", "<=", ">", ">=", "<>", "!="];
-                        $logicalOperator = ["or", "not"];
-                        // chech if the array is multidimensional array
-                        $where = is_array($where[0]) ? $where : [$where];
-                        $whereLen = count($where);
-                        // 
-                        $jointureWhereCondition = "";
-                        $defaultComparison = "=";
-                        $lastIndexWhere = 1;
-                        $fieldValue = [];
-                        // 
-                        foreach ($where as $WhereField) {
-                            $defaultLogical = " and ";
-                            $notComparison = "";
-                            // check if there is a logical operatior `or`||`and`
-                            if (isset($WhereField[3])) {
-                                // check id the defined operation exist in our defined tables
-                                $defaultLogical = in_array(strtolower($WhereField[3]), $logicalOperator) ? $WhereField[3] : " and ";
-                                if ($defaultLogical === "not") {
-                                    $notComparison = " not ";
-                                }
-                            }
-                            // check the field exist and defined by default one
-                            $_WhereField = strlen($WhereField[0]) > 0 ? $WhereField[0] : "id";
-                            $jointureWhereCondition .= " {$notComparison}{$_WhereField}{$defaultComparison} ? ";
-                            $valueTopush = isset($WhereField[2]) ? $WhereField[2] : "";
-                            array_push($fieldValue, $valueTopush);
-                            array_push($params, [$_WhereField => $valueTopush]);
-
-                            if ($lastIndexWhere < $whereLen) {
-                                if ($defaultLogical != "not") {
-                                    $jointureWhereCondition .= $defaultLogical;
-                                }
-                            }
-                            $lastIndexWhere++;
-                        }
-                        $params = $params[0];
+                        $lastIndexWhere++;
                     }
+                    $params = $params[0];
+                    
                     $this->_where = [
                         "field" => "WHERE {$jointureWhereCondition}",
                         "value" => $fieldValue,
@@ -115,6 +128,7 @@ use \FFI\Exception;
                 return false;
             }
         }
+        //
         private function query($sql, array $params = [])
         {
             $q = new DBQeury($this->_pdo, $sql, $params);
@@ -149,6 +163,18 @@ use \FFI\Exception;
             }
             return false;
         }
+        private function update(){
+            $where = isset($this->_where['field']) ? $this->_where['field'] : "";
+            $where_params = isset($this->_where['params']) ? $this->_where['params'] : [];
+            $fields = $this->_fields['keys'];
+            $field_params=isset($this->_fields['params'])?$this->_fields['params']:[];
+            $params=array_merge($field_params, $where_params);
+            $sql = "UPDATE {$this->table} SET {$fields}  {$where}";
+            if (!$this->query($sql, $params)->error()) {
+                return true;
+            }
+            return false;
+        }
         // build request siurce
         private function build()
         {
@@ -157,6 +183,7 @@ use \FFI\Exception;
                     $this->insert();
                     break;
                 case 'update':
+                    $this->update();
                     break;
                 case 'delete':
                     $this->delete();

@@ -61,6 +61,11 @@ use \FFI\Exception;
         {
             return $this->queryOperation($table, "delete");
         }
+        // delete module
+        function update(string $table)
+        {
+            return $this->queryOperation($table, "update");
+        }
         //
         function query($sql, array $params = [])
         {

@@ -33,7 +33,7 @@ namespace Wepesi\App\Core;
                             break;
                             case "matches":
                                 if($value!=$source[$rvalue]){
-                                    $this->addError("{$rule} must match {$item}");
+                                    $this->addError("{$rvalue} must match {$item}");
                                 }
                             break;
                             case "number":

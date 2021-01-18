@@ -1,6 +1,6 @@
 <?php
 // init configuration
-$ini_array = (object) parse_ini_file("./config.ini", true);
+$ini_array = (object) parse_ini_file("./config/config.ini", true);
 $db_conf = (object)$ini_array->db_conf;
 
 // database configuration setup

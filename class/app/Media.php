@@ -4,15 +4,16 @@ namespace Wepesi\App\Core;
     class Media{
         private $_target_dir;
         const maxWidth = 480;
-        const maxHeigth = 400; 
-
-        function __construct($target_dir)
+        const maxHeigth = 400;
+        private $mimeType;
+        function __construct(string $target_dir="media")
         {
             $this->_target_dir= $target_dir;
-            
+            $this->mimeType=null;            
         }
         function uploadImg($file){
             $target_file = $this->_target_dir . basename($file["name"]);
+            $this->mimeType = mime_content_type($file['tmp_name']);
             $filetype = pathinfo($target_file, PATHINFO_EXTENSION);
             $fileExt = array('jpg', 'jpeg', 'png', 'JPG', 'JPEG', 'PNG');
             if (in_array($filetype, $fileExt)) {                
@@ -39,7 +40,7 @@ namespace Wepesi\App\Core;
             }
             $format=explode("/", $formatImg);
             if($format[0]=="photos"){
-                $value = $this->thumbnail($fileToUpload, $target_dir, $Link,$format[1]);
+                $value = $this->thumbnail($fileToUpload, $target_dir, $Link);
                 if (!$value) {
                     return json_decode(array("errorOperation"=> "erreur thumbnail"));
                 }
@@ -56,13 +57,19 @@ namespace Wepesi\App\Core;
             $store = date('y') . Md5($lastid) . date('m');
             return array($img, $store);
         }
-        private function thumbnail($imageToConvert, $source, $dest,$format)
+        private function thumbnail($imageToConvert, $source, $dest)
         {
             $imageCreated = $source . $imageToConvert;
             $thumb=null;
             if ($imageCreated) {
                 list($width, $height) = getimagesize($imageCreated); //$type will return the type of the image
-                $source = $format!="png"? imagecreatefromjpeg($imageCreated): imagecreatefrompng($imageCreated);
+                $source = $imageCreated;
+                switch($this->mimeType){
+                    case "image/pn":$source = imagecreatefrompng($imageCreated);
+                    break;
+                    case "image/jpeg":$source = imagecreatefromjpeg($imageCreated);
+                    break;
+                }
 
                 if (Media::maxWidth >= $width &&  Media::maxHeigth >= $height) {
                     $ratio = 1;

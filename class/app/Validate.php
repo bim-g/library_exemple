@@ -4,10 +4,10 @@ namespace Wepesi\App\Core;
     class Validate{
         private $_passed=false;
         private $_errors=false;
-        private $_db=null;
+        private $db=null;
         function __construct()
         {
-            $this->_db==DB::getInstance();
+            $this->db=DB::getInstance();
         }
 
         function check($source,$items=array()){
@@ -52,7 +52,7 @@ namespace Wepesi\App\Core;
                                     }
                                 break;
                                 case "unique":
-                                    $check=$this->_db->get($rvalue)->where([$item,'=',$value])->result();
+                                    $check=$this->db->get($rvalue)->where([$item,'=',$value])->result();
                                     if(count($check)){
                                         $this->addError("{$item} already exist.");
                                     }

@@ -5,9 +5,11 @@ namespace Wepesi\App\Core;
         private $_passed=false;
         private $_errors=false;
         private $db=null;
+        private $lang;
         function __construct()
         {
             $this->db=DB::getInstance();
+            $this->lang=(object)LANG_VALIDATION;
         }
 
         function check($source,$items=array()){
@@ -18,50 +20,54 @@ namespace Wepesi\App\Core;
                         $item=escape($item);
                         
                         if($rule=='required' && empty($value)){
-                            $this->addError("{$item} is required");
+                            $this->addError("{$item} ".$this->lang->required);
                         }else if(!empty($value)){
                             switch($rule){
                                 case "min":
                                     if(strlen($value)<$rvalue){
-                                        $this->addError("{$item} must be a minimum of {$rvalue} caracters");
+                                        $this->addError("{$item} ". $this->lang->min." {$rvalue} caracters");
                                     }
                                 break;
                                 case "max":
                                     if(strlen($value)>$rvalue){
-                                        $this->addError("{$item} must be a maximum of {$rvalue} caracters");
+                                        $this->addError("{$item} ".$this->lang->max." {$rvalue} caracters");
                                     }
                                 break;
                                 case "matches":
                                     if($value!=$source[$rvalue]){
-                                        $this->addError("{$rvalue} must match {$item}");
+                                        $this->addError("{$rvalue} " . $this->lang->matches . " {$item}");
                                     }
                                 break;
                                 case "number":
                                     if(preg_match("#.\W#",$value) || preg_match("#[a-zA-Z]#",$value)){
-                                        $this->addError("{$item} must be a number");
+                                        $this->addError("{$item} " . $this->lang->number );
                                     }
                                 break;
                                 case "email":
                                     if(!filter_var($value, FILTER_VALIDATE_EMAIL)){
-                                        $this->addError("{$item} invalid email address");
+                                        $this->addError("{$item} " . $this->lang->email );
                                     }
                                 break;
                                 case "url":
                                     if(!preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $source[$rvalue])){
-                                        $this->addError("{$item} invalid url");
+                                        $this->addError("{$item} " . $this->lang->url);
+                                    }
+                                case "file":
+                                    if(!is_file($source[$rvalue])){
+                                        $this->addError("{$item} " . $this->lang->file);
                                     }
                                 break;
                                 case "unique":
                                     $check=$this->db->get($rvalue)->where([$item,'=',$value])->result();
                                     if(count($check)){
-                                        $this->addError("{$item} already exist.");
+                                        $this->addError("{$item}" . $this->lang->unique);
                                     }
                                 break;
                             }
                         }
                     }else{
-                        $this->addError("{$item} is required");
-                    }  
+                        $this->addError("{$item} " . $this->lang->required);
+                    }   
                 }
             }
             if(empty($this->_errors)){
